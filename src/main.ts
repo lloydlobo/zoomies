@@ -33,14 +33,14 @@ export function random(min: number, max: number) {
 const VELOCITY = 5;
 
 export const BALL = {
+  ARR_BALLS: [] as Ball[],
+  count: random(4, 10),
+  hue: `${lerp(0, 255, Math.random() * 10)}`,
+  lightness: `${lerp(30, 51.8, Math.random() * 10)}`,
+  saturation: `${lerp(50, 81.8, Math.random() * 10)}`,
+  size: random(30, 50),
   velX: random(-VELOCITY, VELOCITY),
   velY: random(-VELOCITY, VELOCITY),
-  size: random(12, 21),
-  hue: `${lerp(0, 255, Math.random() * 10)}`,
-  saturation: `${lerp(50, 81.8, Math.random() * 10)}`,
-  lightness: `${lerp(30, 51.8, Math.random() * 10)}`,
-  count: random(1, 3),
-  ARR_BALLS: [] as Ball[],
 };
 
 export function randomColor(alpha: number): string {
@@ -58,7 +58,8 @@ function createNewBall() {
     lerpRandom(0 + BALL.size, height - BALL.size),
     random(-BALL.velX, BALL.velX),
     random(-BALL.velY, BALL.velY),
-    Math.min(lerp(10, BALL.size, Math.random()), 20),
+    // Math.min(lerp(10, BALL.size, Math.random()), 20),
+    40,
     randomColor(random(0.4, 0.99))
   );
 }
