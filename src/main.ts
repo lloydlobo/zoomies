@@ -31,17 +31,16 @@ export function random(min: number, max: number) {
   return num;
 }
 
-const VELOCITY = 8;
+const VELOCITY = 12;
 
 export const BALL = {
   ARR_BALLS: [] as Ball[],
-  count: random(4, 100),
+  count: random(25, 100),
   hue: `${lerp(0, 255, Math.random() * 10)}`,
-  lightness: `${lerp(30, 51.8, Math.random() * 10)}`,
-  saturation: `${lerp(50, 81.8, Math.random() * 10)}`,
+  saturation: `${lerp(30, 81.8, Math.random() * 2)}`,
+  lightness: `${lerp(40, 61.8, Math.random() * 2)}`,
   size: random(30, 50),
-  velX: random(-VELOCITY, VELOCITY),
-  velY: random(-VELOCITY, VELOCITY),
+  vel: Math.max(random(-VELOCITY, VELOCITY), 12),
 };
 
 export function randomColor(alpha: number): string {
@@ -66,11 +65,11 @@ function createNewBall() {
   return new Ball(
     lerpRandom(0 + BALL.size, width - BALL.size),
     lerpRandom(0 + BALL.size, height - BALL.size),
-    random(-BALL.velX, BALL.velX),
-    random(-BALL.velY, BALL.velY),
+    random(-BALL.vel, BALL.vel),
+    random(-BALL.vel, BALL.vel),
     // Math.min(lerp(10, BALL.size, Math.random()), 20),
     40,
-    randomColor(random(0.4, 0.99))
+    randomColor(random(0.8, 0.99))
   );
 }
 
@@ -96,16 +95,18 @@ function animateLoop() {
   ctx.fillStyle = `hsla(0,0%, 0%, 0.7)`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.save(); // cool camera trick infinite scroll type
-  ctx.translate(0, -zoomies.y + canvas.height * 0.7);
+  // ctx.translate(0, -zoomies.y + canvas.height * 0.7);
+
   arena.draw(ctx); // use after ctx.save(), ctx.translate()
   zoomies.draw();
   zoomies.detectCollision();
+  zoomies.updateBounds();
 
   for (let i = 0; i < BALL.count; i += 1) {
     if (BALL.ARR_BALLS[i].exists) {
       BALL.ARR_BALLS[i].draw();
       BALL.ARR_BALLS[i].update();
-      // STATE_BALL.ARR_BALLS[i].detectCollision();
+      BALL.ARR_BALLS[i].detectCollision();
       BALL.ARR_BALLS[i].sensor.draw();
       BALL.ARR_BALLS[i].sensor.update();
     }

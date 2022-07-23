@@ -50,29 +50,45 @@ export class Ball extends Shape {
 
   draw() {
     ctx.beginPath();
-    // ctx.strokeStyle = this.color;
+    ctx.strokeStyle = this.color;
     ctx.fillStyle = this.color;
-
-    // ctx.arc(this.x, this.y, this.size / 2, 0, 2 * Math.PI);
-
-    ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-
-    for (let i = 0; i < this.polygon.length; i += 1) {
-      ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-    }
+    ctx.arc(this.x, this.y, this.size / 2, 0, 2 * Math.PI);
+    // ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+    // for (let i = 0; i < this.polygon.length; i += 1) {
+    //   ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+    // }
     ctx.fill();
-    // ctx.stroke();
+    ctx.stroke();
   } // draw()
 
   update() {
+    this.move();
+    this.sensor.update();
+    // this.detectCollision();
     if (this.exists) {
-      this.move();
-      this.polygon = this.createPolygon();
+      // this.polygon = this.createPolygon();
     }
     if (this.sensor) {
-      this.sensor.update();
     }
   } // update()
+
+  private move() {
+    if (this.x + this.size >= width) {
+      this.velX = -this.velX;
+    }
+    if (this.x - this.size <= 0) {
+      this.velX = -this.velX;
+    }
+    if (this.y - this.size <= 0) {
+      this.velY = -this.velY;
+    }
+    if (this.y + this.size >= height) {
+      this.velY = -this.velY;
+    }
+
+    this.x += this.velX;
+    this.y += this.velY;
+  } // private move()
 
   detectCollision() {
     const balls = BALL.ARR_BALLS;
@@ -82,7 +98,7 @@ export class Ball extends Shape {
         const dy = this.y - ball.y;
         const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         if (distance < this.size + ball.size) {
-          this.color = randomColor(random(0.4, 1));
+          this.color = randomColor(random(0.8, 1));
           ball.color = this.color;
         }
       }
@@ -113,8 +129,8 @@ export class Ball extends Shape {
 
     const POINTS = {
       topRight: {
-        x: this.x - Math.sin(this.angle - alpha) * radius * random(0.996, 1),
-        y: this.y - Math.cos(this.angle - alpha) * radius * random(0.996, 1),
+        x: this.x - Math.sin(this.angle - alpha) * radius,
+        y: this.y - Math.cos(this.angle - alpha) * radius,
       },
       bottomRight: {
         x: this.x - Math.sin(this.angle + alpha) * radius,
@@ -132,22 +148,4 @@ export class Ball extends Shape {
 
     return POINTS;
   } // private getPoints()
-
-  private move() {
-    if (this.x + this.size >= width) {
-      this.velX = -this.velX;
-    }
-    if (this.x - this.size <= 0) {
-      this.velX = -this.velX;
-    }
-    if (this.y - this.size <= 0) {
-      this.velY = -this.velY;
-    }
-    if (this.y + this.size >= height) {
-      this.velY = -this.velY;
-    }
-
-    this.x += this.velX;
-    this.y += this.velY;
-  } // private move()
 }

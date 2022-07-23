@@ -58,7 +58,6 @@ export class Zoomy extends Shape {
 
     // ctx.save();
     // ctx.translate(this.x, this.y);
-    // ctx.rotate(-this.angle);
 
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth;
