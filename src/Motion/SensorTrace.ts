@@ -16,9 +16,9 @@ export class SensorTrace {
   readings: never[];
   constructor(balls: Ball) {
     this.balls = balls;
-    this.rayCount = 1;
-    this.rayLength = (lerp(width, height, 0.618) / balls.size) * 1.618;
-    this.raySpread = Math.PI / 2;
+    this.rayCount = 12 || 12;
+    this.rayLength = lerp(width, height, 0.618) / balls.size / 1.5;
+    this.raySpread = 2 * Math.PI;
 
     this.rays = [];
     this.readings = [];
@@ -61,7 +61,7 @@ export class SensorTrace {
 
       ctx.beginPath();
       ctx.lineWidth = 2;
-      ctx.strokeStyle = `hsla(0, 57%, 30%, 0.5)`;
+      ctx.strokeStyle = `hsla(0, 67%, 30%, 0.5)`;
       ctx.moveTo(this.rays[i][0].x, this.rays[i][0].y);
       ctx.lineTo(end.x, end.y);
       ctx.stroke();

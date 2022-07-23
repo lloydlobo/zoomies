@@ -11,6 +11,16 @@ export class Ball extends Shape {
 
   sensor: SensorTrace;
 
+  angle: number;
+
+  pointX: number;
+
+  pointY: number;
+
+  speed: number;
+
+  acceleration: number;
+
   constructor(
     x: number,
     y: number,
@@ -25,6 +35,11 @@ export class Ball extends Shape {
     this.exists = true;
 
     this.sensor = new SensorTrace(this);
+    this.pointX = this.x;
+    this.pointY = this.y;
+    this.speed = Math.sqrt(Math.pow(this.velX, 2) + Math.pow(this.velY, 2));
+    this.acceleration = 0.05;
+    this.angle = random(0, 2 * Math.PI);
   }
 
   draw() {
@@ -36,25 +51,43 @@ export class Ball extends Shape {
   }
 
   update() {
+    this.move();
+
+    // this.angle -= Math.sin(this.angle);
+    this.trace();
+    if (this.sensor) {
+      this.sensor.update();
+    }
+  }
+  private trace() {
+    this.pointX -= Math.sin(this.angle) * this.speed;
+    this.pointY -= Math.cos(this.angle) * this.speed;
+  }
+
+  private move() {
     if (this.x + this.size >= width) {
       this.velX = -this.velX;
+      // this.speed = -this.speed;
     }
     if (this.x - this.size <= 0) {
       this.velX = -this.velX;
+      // this.speed = -this.speed;
     }
     if (this.y - this.size <= 0) {
       this.velY = -this.velY;
+      // this.speed = -this.speed;
     }
     if (this.y + this.size >= height) {
       this.velY = -this.velY;
+      // this.speed = -this.speed;
     }
 
     this.x += this.velX;
     this.y += this.velY;
 
-    if (this.sensor) {
-      this.sensor.update();
-    }
+    // this.angle = -this.angle;
+    // this.x -= Math.sin(this.angle) * this.speed;
+    // this.y -= Math.cos(this.angle) * this.speed;
   }
 
   detectCollision() {

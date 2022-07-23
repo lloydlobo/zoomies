@@ -16,9 +16,9 @@ export class Sensor {
   readings: never[];
   constructor(zoomies: Zoomy) {
     this.zoomies = zoomies;
-    this.rayCount = 3;
+    this.rayCount = 5;
     this.rayLength = (lerp(width, height, 0.618) / zoomies.size) * 1.618;
-    this.raySpread = Math.PI / 2;
+    this.raySpread = Math.PI;
 
     this.rays = [];
     this.readings = [];
