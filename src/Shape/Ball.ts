@@ -1,9 +1,9 @@
-import { ctx, height, random, randomColor, STATE_BALL, width } from "../main";
+import { ctx, height, random, randomColor, BALL, width } from "../main";
 import { SensorTrace } from "../Motion/SensorTrace";
 import { Shape } from "./Shape";
 
 export class Ball extends Shape {
-  size: any;
+  size: number;
 
   color: string;
 
@@ -21,18 +21,27 @@ export class Ball extends Shape {
 
   acceleration: number;
 
+  width: number;
+
+  height: number;
+  polygon: { x: number; y: number }[];
+
   constructor(
     x: number,
     y: number,
     velX: number,
     velY: number,
-    size: any,
+    size: number,
     color: string
   ) {
     super(x, y, velX, velY);
     this.size = size;
+    this.polygon = [];
     this.color = color;
     this.exists = true;
+
+    this.width = size * 2;
+    this.height = size * 2;
 
     this.sensor = new SensorTrace(this);
     this.pointX = this.x;
@@ -51,13 +60,41 @@ export class Ball extends Shape {
   }
 
   update() {
-    this.move();
+    if (this.exists) {
+      this.move();
+      this.polygon = this.createPolygon();
+    }
 
     // this.angle -= Math.sin(this.angle);
     this.trace();
     if (this.sensor) {
       this.sensor.update();
     }
+  }
+
+  private createPolygon(): { x: number; y: number }[] {
+    const points = [];
+    const rad = Math.hypot(this.width, this.height) / 2;
+    const alpha = Math.atan2(this.width, this.height);
+
+    points.push({
+      x: this.x - Math.sin(this.angle - alpha) * rad,
+      y: this.y - Math.cos(this.angle - alpha) * rad,
+    });
+    points.push({
+      x: this.x - Math.sin(this.angle + alpha) * rad,
+      y: this.y - Math.cos(this.angle + alpha) * rad,
+    });
+    points.push({
+      x: this.x - Math.sin(Math.PI + this.angle - alpha) * rad,
+      y: this.y - Math.cos(Math.PI + this.angle - alpha) * rad,
+    });
+    points.push({
+      x: this.x - Math.sin(Math.PI + this.angle + alpha) * rad,
+      y: this.y - Math.cos(Math.PI + this.angle + alpha) * rad,
+    });
+
+    return points;
   }
   private trace() {
     this.pointX -= Math.sin(this.angle) * this.speed;
@@ -91,7 +128,7 @@ export class Ball extends Shape {
   }
 
   detectCollision() {
-    const balls = STATE_BALL.ARR_BALLS;
+    const balls = BALL.ARR_BALLS;
     for (const ball of balls) {
       if (!(this === ball)) {
         const dx = this.x - ball.x;

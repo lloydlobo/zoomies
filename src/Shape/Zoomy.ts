@@ -1,4 +1,4 @@
-import { ctx, height, STATE_BALL, width } from "../main";
+import { ctx, height, BALL, width } from "../main";
 import { Controls } from "../Motion/Controls";
 import { Sensor } from "../Motion/Sensor";
 import { Shape } from "./Shape";
@@ -77,7 +77,7 @@ export class Zoomy extends Shape {
   }
 
   detectCollision() {
-    const balls = STATE_BALL.ARR_BALLS;
+    const balls = BALL.ARR_BALLS;
     for (const ball of balls) {
       if (ball.exists) {
         const dx = this.x - ball.x;

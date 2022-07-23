@@ -29,41 +29,43 @@ export function random(min: number, max: number) {
 
   return num;
 }
-const VELOCITY = 20;
-export const STATE_BALL = {
+
+const VELOCITY = 5;
+
+export const BALL = {
   velX: random(-VELOCITY, VELOCITY),
   velY: random(-VELOCITY, VELOCITY),
   size: random(12, 21),
   hue: `${lerp(0, 255, Math.random() * 10)}`,
   saturation: `${lerp(50, 81.8, Math.random() * 10)}`,
   lightness: `${lerp(30, 51.8, Math.random() * 10)}`,
-  count: random(10, 35),
+  count: random(1, 3),
   ARR_BALLS: [] as Ball[],
 };
 
 export function randomColor(alpha: number): string {
   return `
   hsla(
-    ${lerp(0, parseFloat(STATE_BALL.hue), Math.random() * 10)}, 
-    ${STATE_BALL.saturation}%, 
-    ${STATE_BALL.lightness}%, ${alpha})
+    ${lerp(0, parseFloat(BALL.hue), Math.random() * 10)}, 
+    ${BALL.saturation}%, 
+    ${BALL.lightness}%, ${alpha})
   `;
 }
 
 function createNewBall() {
   return new Ball(
-    lerpRandom(0 + STATE_BALL.size, width - STATE_BALL.size),
-    lerpRandom(0 + STATE_BALL.size, height - STATE_BALL.size),
-    random(-STATE_BALL.velX, STATE_BALL.velX),
-    random(-STATE_BALL.velY, STATE_BALL.velY),
-    Math.min(lerp(10, STATE_BALL.size, Math.random()), 20),
+    lerpRandom(0 + BALL.size, width - BALL.size),
+    lerpRandom(0 + BALL.size, height - BALL.size),
+    random(-BALL.velX, BALL.velX),
+    random(-BALL.velY, BALL.velY),
+    Math.min(lerp(10, BALL.size, Math.random()), 20),
     randomColor(random(0.4, 0.99))
   );
 }
 
-for (let i = 0; i < STATE_BALL.count; i += 1) {
+for (let i = 0; i < BALL.count; i += 1) {
   const ball = createNewBall();
-  STATE_BALL.ARR_BALLS.push(ball);
+  BALL.ARR_BALLS.push(ball);
 }
 const zoomies = new Zoomy(
   random(10, width),
@@ -80,13 +82,13 @@ function loop() {
   ctx.fillStyle = `hsla(0,${zoomies.speed * 2 + 50}%, 1%, 0.47)`;
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < STATE_BALL.count; i += 1) {
-    if (STATE_BALL.ARR_BALLS[i].exists) {
-      STATE_BALL.ARR_BALLS[i].draw();
-      STATE_BALL.ARR_BALLS[i].update();
-      STATE_BALL.ARR_BALLS[i].detectCollision();
-      STATE_BALL.ARR_BALLS[i].sensor.draw();
-      STATE_BALL.ARR_BALLS[i].sensor.update();
+  for (let i = 0; i < BALL.count; i += 1) {
+    if (BALL.ARR_BALLS[i].exists) {
+      BALL.ARR_BALLS[i].draw();
+      BALL.ARR_BALLS[i].update();
+      // STATE_BALL.ARR_BALLS[i].detectCollision();
+      BALL.ARR_BALLS[i].sensor.draw();
+      BALL.ARR_BALLS[i].sensor.update();
     }
   }
 
