@@ -56,7 +56,7 @@ function createNewBall() {
     lerpRandom(0 + STATE_BALL.size, height - STATE_BALL.size),
     random(-STATE_BALL.velX, STATE_BALL.velX),
     random(-STATE_BALL.velY, STATE_BALL.velY),
-    Math.min(lerp(10, STATE_BALL.size, Math.random() * 10), 35),
+    Math.min(lerp(10, STATE_BALL.size, Math.random()), 20),
     randomColor(random(0.4, 0.99))
   );
 }
@@ -94,6 +94,7 @@ function loop() {
   zoomies.detectCollision();
   zoomies.sensor.draw();
   zoomies.sensor.update();
+
   ctx.restore();
   requestAnimationFrame(loop);
 }
