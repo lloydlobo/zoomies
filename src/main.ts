@@ -85,6 +85,8 @@ function loop() {
       STATE_BALL.ARR_BALLS[i].draw();
       STATE_BALL.ARR_BALLS[i].update();
       STATE_BALL.ARR_BALLS[i].detectCollision();
+      STATE_BALL.ARR_BALLS[i].sensor.draw();
+      STATE_BALL.ARR_BALLS[i].sensor.update();
     }
   }
 

@@ -53,16 +53,11 @@ export class Zoomy extends Shape {
   }
 
   draw() {
-    // ctx.save();
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth;
     ctx.strokeStyle = this.color;
     ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
     ctx.stroke();
-    // if (this.sensor) {
-    // this.sensor.draw();
-    // }
-    // ctx.restore();
   }
 
   update() {

@@ -1,4 +1,5 @@
 import { ctx, height, random, randomColor, STATE_BALL, width } from "../main";
+import { SensorTrace } from "../Motion/SensorTrace";
 import { Shape } from "./Shape";
 
 export class Ball extends Shape {
@@ -7,6 +8,8 @@ export class Ball extends Shape {
   color: string;
 
   exists: boolean;
+
+  sensor: SensorTrace;
 
   constructor(
     x: number,
@@ -20,6 +23,8 @@ export class Ball extends Shape {
     this.size = size;
     this.color = color;
     this.exists = true;
+
+    this.sensor = new SensorTrace(this);
   }
 
   draw() {
@@ -43,8 +48,13 @@ export class Ball extends Shape {
     if (this.y + this.size >= height) {
       this.velY = -this.velY;
     }
+
     this.x += this.velX;
     this.y += this.velY;
+
+    if (this.sensor) {
+      this.sensor.update();
+    }
   }
 
   detectCollision() {
