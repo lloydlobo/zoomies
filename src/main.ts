@@ -30,7 +30,7 @@ export function random(min: number, max: number) {
   return num;
 }
 
-const VELOCITY = 5;
+const VELOCITY = 8;
 
 export const BALL = {
   ARR_BALLS: [] as Ball[],
@@ -73,7 +73,7 @@ const zoomies = new Zoomy(
   random(10, height),
   random(-VELOCITY, VELOCITY),
   random(-VELOCITY, VELOCITY),
-  VELOCITY / 4,
+  VELOCITY / 1.618,
   "white",
   10
 );
@@ -98,7 +98,7 @@ function loop() {
   zoomies.updateBounds();
   zoomies.detectCollision();
   zoomies.sensor.draw();
-  zoomies.sensor.update();
+  // zoomies.sensor.update();
 
   ctx.restore();
   requestAnimationFrame(loop);

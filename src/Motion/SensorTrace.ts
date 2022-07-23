@@ -44,8 +44,8 @@ export class SensorTrace {
 
   private castRays() {
     this.rays = [];
-    const flipX = this.balls.velX > 0 ? 1 : -1;
-    const flipY = this.balls.velY > 0 ? 1 : -1;
+    // const flipX = this.balls.velX > 0 ? 1 : -1;
+    // const flipY = this.balls.velY > 0 ? 1 : -1;
     for (let i = 0; i < this.rayCount; i += 1) {
       const rayAngle =
         lerp(
@@ -53,12 +53,12 @@ export class SensorTrace {
           -this.raySpread / 2,
           this.rayCount === 1 ? 0.5 : i / (this.rayCount - 1)
         ) +
-        Math.sqrt(
-          Math.pow(this.balls.velX * flipX, 2) +
-            Math.pow(this.balls.velY * flipY, 2)
-        );
+        Math.sqrt(Math.pow(this.balls.velX, 2) + Math.pow(this.balls.velY, 2));
 
-      const start = { x: this.balls.x, y: this.balls.y };
+      const start = {
+        x: this.balls.x - this.balls.velX,
+        y: this.balls.y - this.balls.velY,
+      };
       const end = {
         x: this.balls.x - Math.sin(rayAngle) * this.rayLength,
         y: this.balls.y - Math.cos(rayAngle) * this.rayLength,

@@ -66,6 +66,7 @@ export class Zoomy extends Shape {
     }
     if (this.sensor) {
       this.sensor.update();
+      this.sensor.castRays();
     }
   }
 

@@ -40,6 +40,7 @@ export class Ball extends Shape {
 
     this.width = size;
     this.height = size;
+    this.polygon = this.createPolygon();
 
     this.sensor = new SensorTrace(this);
     this.speed = Math.sqrt(Math.pow(this.velX, 2) + Math.pow(this.velY, 2));
@@ -49,10 +50,17 @@ export class Ball extends Shape {
 
   draw() {
     ctx.beginPath();
-    ctx.strokeStyle = this.color;
+    // ctx.strokeStyle = this.color;
     ctx.fillStyle = this.color;
-    ctx.arc(this.x, this.y, this.size / 2, 0, 2 * Math.PI);
+
+    // ctx.arc(this.x, this.y, this.size / 2, 0, 2 * Math.PI);
+
+    ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+    for (let i = 0; i < this.polygon.length; i += 1) {
+      ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+    }
     ctx.fill();
+    // ctx.stroke();
   } // draw()
 
   update() {

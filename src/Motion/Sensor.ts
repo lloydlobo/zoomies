@@ -28,7 +28,7 @@ export class Sensor {
     this.castRays();
   }
 
-  private castRays() {
+  castRays() {
     this.rays = [];
     for (let i = 0; i < this.rayCount; i += 1) {
       const rayAngle =
@@ -38,7 +38,20 @@ export class Sensor {
           this.rayCount === 1 ? 0.5 : i / (this.rayCount - 1)
         ) + this.zoomies.angle;
 
-      const start = { x: this.zoomies.x, y: this.zoomies.y };
+      const flipX = this.zoomies.speed > 0 ? 1 : -1;
+      const flipY = this.zoomies.speed > 0 ? 1 : -1;
+      const dragX =
+        Math.sin(this.zoomies.angle) * this.zoomies.speed -
+        this.zoomies.speed * this.zoomies.acceleration;
+
+      const dragY =
+        Math.cos(this.zoomies.angle) * this.zoomies.speed -
+        this.zoomies.speed * this.zoomies.acceleration;
+
+      const start = {
+        x: this.zoomies.x + dragX * flipX,
+        y: this.zoomies.y + dragY * flipY,
+      };
       const end = {
         x: this.zoomies.x - Math.sin(rayAngle) * this.rayLength,
         y: this.zoomies.y - Math.cos(rayAngle) * this.rayLength,
