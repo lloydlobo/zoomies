@@ -91,15 +91,15 @@ const zoomies = new Zoomy(
 
 function animateLoop() {
   zoomies.update(arena.borders);
-
-  canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+
   ctx.fillStyle = `hsla(0,0%, 0%, 0.7)`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   ctx.save(); // cool camera trick infinite scroll type
   ctx.translate(0, -zoomies.y + canvas.height * 0.7);
   arena.draw(ctx); // use after ctx.save(), ctx.translate()
+  zoomies.draw();
+  zoomies.detectCollision();
 
   for (let i = 0; i < BALL.count; i += 1) {
     if (BALL.ARR_BALLS[i].exists) {
@@ -110,13 +110,6 @@ function animateLoop() {
       BALL.ARR_BALLS[i].sensor.update();
     }
   }
-
-  zoomies.draw();
-  zoomies.sensor.draw();
-  zoomies.detectCollision();
-  // zoomies.updateBounds();
-  // zoomies.sensor.update();
-
   ctx.restore(); // restore save & translate
 
   requestAnimationFrame(animateLoop);

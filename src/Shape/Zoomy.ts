@@ -4,29 +4,27 @@ import { Sensor } from "../Motion/Sensor";
 import { Shape } from "./Shape";
 
 export class Zoomy extends Shape {
-  color: any;
-
-  size: any;
-
-  lineWidth: number;
-
-  damaged: boolean;
-
-  speed: number;
-
   acceleration: number;
-
-  maxSpeed: number;
-
-  friction: number;
 
   angle: number;
 
+  color: string;
+
   controls: Controls;
+
+  damaged: boolean;
+
+  friction: number;
+
+  lineWidth: number;
+
+  maxSpeed: number;
 
   sensor: Sensor;
 
-  raySpread: number;
+  size: number;
+
+  speed: number;
 
   constructor(
     x: number,
@@ -38,6 +36,7 @@ export class Zoomy extends Shape {
     size: number
   ) {
     super(x, y, velX, velY);
+
     this.x = x;
     this.y = y;
     this.color = color || "white";
@@ -50,27 +49,34 @@ export class Zoomy extends Shape {
     this.friction = 0.05;
     this.angle = 0;
     this.controls = new Controls("KEYS");
-    this.raySpread = this.getRaySpread(); // maybe add it to the constructor
-    this.sensor = new Sensor(this, this.raySpread);
+    this.sensor = new Sensor(this);
     // if (this.controls.down) this.raySpread = Math.PI * 2;
   }
 
   draw() {
+    this.sensor.draw();
+
+    // ctx.save();
+    // ctx.translate(this.x, this.y);
+    // ctx.rotate(-this.angle);
+
     ctx.beginPath();
     ctx.lineWidth = this.lineWidth;
     ctx.strokeStyle = this.color;
     ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
     ctx.stroke();
+
+    // ctx.restore();
   }
 
   update(arenaBorders: { x: number; y: number }[][]) {
     if (!this.damaged) {
-      this.move();
     }
-    if (this.sensor) {
-      this.sensor.update(arenaBorders);
-      this.sensor.castRays();
-    }
+    // if (this.sensor) {
+    this.sensor.update(arenaBorders);
+    this.sensor.castRays();
+    this.move();
+    // }
   }
 
   updateBounds() {
@@ -135,9 +141,5 @@ export class Zoomy extends Shape {
         this.angle -= 0.03 * flipDirection;
       }
     }
-  }
-
-  private getRaySpread() {
-    return this.acceleration > 0.2 ? 1.5 * Math.PI : Math.PI;
   }
 }

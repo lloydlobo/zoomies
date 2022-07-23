@@ -1,7 +1,13 @@
 import { lerp } from "../utils/lerp";
 
 export class Arena {
+  borders: { x: number; y: number }[][];
+
   bottom: number;
+
+  bottomInfinity: number;
+
+  height: number;
 
   laneCount: number;
 
@@ -11,15 +17,13 @@ export class Arena {
 
   top: number;
 
+  topInfinity: number;
+
   width: number;
 
   x: number;
 
-  borders;
-  height: number;
   y: number;
-  topInfinity: number;
-  bottomInfinity: number;
 
   constructor(
     x: number,
