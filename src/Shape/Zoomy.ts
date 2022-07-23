@@ -26,6 +26,8 @@ export class Zoomy extends Shape {
 
   sensor: Sensor;
 
+  raySpread: number;
+
   constructor(
     x: number,
     y: number,
@@ -47,9 +49,10 @@ export class Zoomy extends Shape {
     this.maxSpeed = maxSpeed;
     this.friction = 0.05;
     this.angle = 0;
-
-    this.sensor = new Sensor(this);
     this.controls = new Controls("KEYS");
+    this.raySpread = this.getRaySpread(); // maybe add it to the constructor
+    this.sensor = new Sensor(this, this.raySpread);
+    // if (this.controls.down) this.raySpread = Math.PI * 2;
   }
 
   draw() {
@@ -103,7 +106,9 @@ export class Zoomy extends Shape {
 
   private accelerateUpDown() {
     if (this.controls.up) this.speed += this.acceleration;
-    if (this.controls.down) this.speed -= this.acceleration;
+    if (this.controls.down) {
+      this.speed -= this.acceleration;
+    }
   }
 
   private limitSpeed() {
@@ -126,5 +131,9 @@ export class Zoomy extends Shape {
       if (this.controls.left) this.angle += 0.03 * flipDirection;
       if (this.controls.right) this.angle -= 0.03 * flipDirection;
     }
+  }
+
+  private getRaySpread() {
+    return this.acceleration > 0.2 ? 1.5 * Math.PI : Math.PI;
   }
 }

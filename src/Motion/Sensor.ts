@@ -14,11 +14,11 @@ export class Sensor {
   rays: { x: number; y: number }[][];
 
   readings: never[];
-  constructor(zoomies: Zoomy) {
+  constructor(zoomies: Zoomy, raySpread: number) {
     this.zoomies = zoomies;
     this.rayCount = 5;
     this.rayLength = (lerp(width, height, 0.618) / zoomies.size) * 1.618;
-    this.raySpread = Math.PI;
+    this.raySpread = raySpread;
 
     this.rays = [];
     this.readings = [];
@@ -47,7 +47,7 @@ export class Sensor {
       const dragY =
         Math.cos(this.zoomies.angle) * this.zoomies.speed -
         this.zoomies.speed * this.zoomies.acceleration;
-
+      // TODO if zoomies.speed or controls.down then -Math.cos()
       const start = {
         x: this.zoomies.x + dragX * flipX,
         y: this.zoomies.y + dragY * flipY,
