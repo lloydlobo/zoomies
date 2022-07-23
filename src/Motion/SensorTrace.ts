@@ -1,4 +1,4 @@
-import { ctx, height, BALL, width } from "../main";
+import { ctx, height, width } from "../main";
 import { Ball } from "../Shape/Ball";
 import { getIntersection } from "../utils/getIntersection";
 import { lerp } from "../utils/lerp";
@@ -14,9 +14,7 @@ export class SensorTrace {
 
   rays: { x: number; y: number }[][];
 
-  readings:
-    | { x: number; y: number }[]
-    | ({ x: number; y: number; offset: number } | null)[];
+  readings: { x: number; y: number }[];
 
   constructor(balls: Ball) {
     this.balls = balls;
@@ -28,17 +26,14 @@ export class SensorTrace {
     this.readings = [];
   }
 
-  update() {
+  update(arenaBorders: { x: number; y: number }[][]) {
     this.castRays();
     this.readings = [];
-    const balls = BALL.ARR_BALLS as Ball[];
-    if (balls) {
-      for (let i = 0; i < this.rays.length; i += 1) {
-        const reading = this.getReadings(this.rays[i], balls);
-        if (!reading) return;
+    for (let i = 0; i < this.rays.length; i += 1) {
+      const reading = this.getReadings(this.rays[i], arenaBorders);
+      if (!reading) return;
 
-        this.readings.push(reading);
-      }
+      this.readings.push(reading);
     }
   }
 
@@ -68,33 +63,68 @@ export class SensorTrace {
     }
   }
 
-  private getReadings(ray: { x: number; y: number }[], balls: Ball[]) {
-    let arrTouches = [];
-    let poly;
-    for (let i = 0; i < balls.length; i += 1) {
-      poly = balls[i].polygon;
-      for (let j = 0; j < poly.length; j += 1) {
-        const touch = getIntersection(
-          ray[0],
-          ray[1],
-          poly[j],
-          poly[(j + 1) % poly.length]
-        );
+  // private getReadings(
+  //   ray: { x: number; y: number }[],
+  //   arenaBorders: string | any[]
+  // ) {
+  //   let arrTouches = [];
+  //   let poly;
+  //   for (let i = 0; i < arenaBorders.length; i += 1) {
+  //     poly = arenaBorders[i].polygon;
+  //     for (let j = 0; j < poly.length; j += 1) {
+  //       const touch = getIntersection(
+  //         ray[0],
+  //         ray[1],
+  //         poly[j],
+  //         poly[(j + 1) % poly.length]
+  //       );
 
-        if (touch) {
-          arrTouches.push(touch);
-        }
+  //       if (touch) {
+  //         arrTouches.push(touch);
+  //       }
+  //     }
+  //   }
+
+  //   if (arrTouches.length === 0) {
+  //     return null;
+  //   } else {
+  //     const offsets = arrTouches.map((e) => e.offset);
+  //     const offsetMin = Math.min(...offsets);
+  //     return arrTouches.find((e) => e.offset === offsetMin);
+  //   }
+  // }
+
+  private getReadings(
+    ray: { x: number; y: number }[],
+    arenaBorders: { x: number; y: number }[][]
+  ) {
+    const arrTouches = [];
+
+    for (let i = 0; i < arenaBorders.length; i += 1) {
+      const touch = getIntersection(
+        ray[0],
+        ray[1],
+        arenaBorders[i][0],
+        arenaBorders[i][1]
+      );
+
+      if (touch) {
+        arrTouches.push(touch);
       }
     }
 
     if (arrTouches.length === 0) {
       return null;
     } else {
-      const offsets = arrTouches.map((e) => e.offset);
-      const offsetMin = Math.min(...offsets);
-      return arrTouches.find((e) => e.offset === offsetMin);
+      const arrOffsets = arrTouches.map((elem) => elem.offset);
+      const minOffset = Math.min(...arrOffsets);
+      const findTouchWithMinOffset = arrTouches.find(
+        (e) => e.offset === minOffset
+      );
+
+      return findTouchWithMinOffset;
     }
-  }
+  } // private getReadings()
 
   draw() {
     for (let i = 0; i < this.rayCount; i += 1) {

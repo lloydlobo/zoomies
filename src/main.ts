@@ -91,6 +91,7 @@ const zoomies = new Zoomy(
 function animateLoop() {
   zoomies.update(arena.borders);
   canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
 
   ctx.fillStyle = `hsla(0,0%, 0%, 0.7)`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -105,10 +106,10 @@ function animateLoop() {
   for (let i = 0; i < BALL.count; i += 1) {
     if (BALL.ARR_BALLS[i].exists) {
       BALL.ARR_BALLS[i].draw();
-      BALL.ARR_BALLS[i].update();
+      BALL.ARR_BALLS[i].update(arena.borders);
       BALL.ARR_BALLS[i].detectCollision();
       BALL.ARR_BALLS[i].sensor.draw();
-      BALL.ARR_BALLS[i].sensor.update();
+      // BALL.ARR_BALLS[i].sensor.update();
     }
   }
   ctx.restore(); // restore save & translate

@@ -73,7 +73,7 @@ export class Zoomy extends Shape {
     }
     // if (this.sensor) {
     this.sensor.update(arenaBorders);
-    this.sensor.castRays();
+    // this.sensor.castRays();
     this.move();
     // }
   }

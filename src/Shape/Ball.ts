@@ -49,6 +49,8 @@ export class Ball extends Shape {
   } // end constructor()
 
   draw() {
+    // this.sensor.draw();
+
     ctx.beginPath();
     ctx.strokeStyle = this.color;
     ctx.fillStyle = this.color;
@@ -61,9 +63,10 @@ export class Ball extends Shape {
     ctx.stroke();
   } // draw()
 
-  update() {
+  update(arenaBorders: { x: number; y: number }[][]) {
     this.move();
-    this.sensor.update();
+    // this.sensor.castRays();
+    this.sensor.update(arenaBorders);
     // this.detectCollision();
     if (this.exists) {
       // this.polygon = this.createPolygon();
