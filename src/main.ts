@@ -1,3 +1,4 @@
+import { Arena } from "./Arena/Arena";
 import { Ball } from "./Shape/Ball";
 import { Zoomy } from "./Shape/Zoomy";
 import "./style.css";
@@ -52,6 +53,9 @@ export function randomColor(alpha: number): string {
   `;
 }
 
+const offsetArenaEdges = 95.99 / 100;
+export const arena = new Arena(width / 2, width * offsetArenaEdges, 3);
+
 function createNewBall() {
   return new Ball(
     lerpRandom(0 + BALL.size, width - BALL.size),
@@ -69,7 +73,8 @@ for (let i = 0; i < BALL.count; i += 1) {
   BALL.ARR_BALLS.push(ball);
 }
 const zoomies = new Zoomy(
-  random(10, width),
+  // random(10, width),
+  arena.getLaneCenter(1),
   random(10, height),
   random(-VELOCITY, VELOCITY),
   random(-VELOCITY, VELOCITY),
@@ -78,11 +83,14 @@ const zoomies = new Zoomy(
   10
 );
 
-function loop() {
-  ctx.save();
+function animateLoop() {
   ctx.fillStyle = `hsla(0,${zoomies.speed * 2 + 50}%, 1%, 0.47)`;
-  // ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvas.height = window.innerHeight;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.save(); // cool camera trick infinite scroll type
+  ctx.translate(0, -zoomies.y + canvas.height * 0.7);
+  arena.draw(ctx); // use after ctx.save(), ctx.translate()
+
   for (let i = 0; i < BALL.count; i += 1) {
     if (BALL.ARR_BALLS[i].exists) {
       BALL.ARR_BALLS[i].draw();
@@ -94,14 +102,14 @@ function loop() {
   }
 
   zoomies.draw();
-  zoomies.update();
+  zoomies.update(arena.borders);
   zoomies.updateBounds();
   zoomies.detectCollision();
   zoomies.sensor.draw();
   // zoomies.sensor.update();
 
-  ctx.restore();
-  requestAnimationFrame(loop);
+  ctx.restore(); // restore save & translate
+  requestAnimationFrame(animateLoop);
 }
 
-loop();
+animateLoop();

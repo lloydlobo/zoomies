@@ -63,12 +63,12 @@ export class Zoomy extends Shape {
     ctx.stroke();
   }
 
-  update() {
+  update(arenaBorders: { x: number; y: number }[][]) {
     if (!this.damaged) {
       this.move();
     }
     if (this.sensor) {
-      this.sensor.update();
+      this.sensor.update(arenaBorders);
       this.sensor.castRays();
     }
   }
@@ -98,7 +98,7 @@ export class Zoomy extends Shape {
     this.limitSpeed();
     this.addFriction();
     this.slowDownStop();
-    this.turnLeftRight();
+    this.steerAngleLeftRight();
 
     this.x -= Math.sin(this.angle) * this.speed;
     this.y -= Math.cos(this.angle) * this.speed;
@@ -125,11 +125,15 @@ export class Zoomy extends Shape {
     if (Math.abs(this.speed) < this.friction) this.speed = 0;
   }
 
-  private turnLeftRight() {
+  private steerAngleLeftRight() {
     const flipDirection = this.speed > 0 ? 1 : -1;
     if (this.speed !== 0) {
-      if (this.controls.left) this.angle += 0.03 * flipDirection;
-      if (this.controls.right) this.angle -= 0.03 * flipDirection;
+      if (this.controls.left) {
+        this.angle += 0.03 * flipDirection;
+      }
+      if (this.controls.right) {
+        this.angle -= 0.03 * flipDirection;
+      }
     }
   }
 

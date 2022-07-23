@@ -56,6 +56,7 @@ export class Ball extends Shape {
     // ctx.arc(this.x, this.y, this.size / 2, 0, 2 * Math.PI);
 
     ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+
     for (let i = 0; i < this.polygon.length; i += 1) {
       ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
     }
@@ -112,8 +113,8 @@ export class Ball extends Shape {
 
     const POINTS = {
       topRight: {
-        x: this.x - Math.sin(this.angle - alpha) * radius,
-        y: this.y - Math.cos(this.angle - alpha) * radius,
+        x: this.x - Math.sin(this.angle - alpha) * radius * random(0.996, 1),
+        y: this.y - Math.cos(this.angle - alpha) * radius * random(0.996, 1),
       },
       bottomRight: {
         x: this.x - Math.sin(this.angle + alpha) * radius,

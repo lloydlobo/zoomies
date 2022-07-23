@@ -1,5 +1,6 @@
 import { ctx, height, width } from "../main";
 import { Zoomy } from "../Shape/Zoomy";
+import { getIntersection } from "../utils/getIntersection";
 import { lerp } from "../utils/lerp";
 
 export class Sensor {
@@ -13,7 +14,7 @@ export class Sensor {
 
   rays: { x: number; y: number }[][];
 
-  readings: never[];
+  readings: { x: number; y: number }[];
   constructor(zoomies: Zoomy, raySpread: number) {
     this.zoomies = zoomies;
     this.rayCount = 5;
@@ -24,9 +25,47 @@ export class Sensor {
     this.readings = [];
   }
 
-  update() {
+  update(arenaBorders: { x: number; y: number }[][]) {
     this.castRays();
+    this.readings = [];
+    for (let i = 0; i < this.rays.length; i++) {
+      const reading = this.getReadings(this.rays[i], arenaBorders);
+      if (!reading) continue;
+      this.readings.push(reading);
+    }
   }
+
+  private getReadings(
+    ray: { x: number; y: number }[],
+    arenaBorders: { x: number; y: number }[][]
+  ) {
+    const arrTouches = [];
+
+    for (let i = 0; i < arenaBorders.length; i += 1) {
+      const touch = getIntersection(
+        ray[0],
+        ray[1],
+        arenaBorders[i][0],
+        arenaBorders[i][1]
+      );
+
+      if (touch) {
+        arrTouches.push(touch);
+      }
+    }
+
+    if (arrTouches.length === 0) {
+      return null;
+    } else {
+      const arrOffsets = arrTouches.map((elem) => elem.offset);
+      const minOffset = Math.min(...arrOffsets);
+      const findTouchWithMinOffset = arrTouches.find(
+        (e) => e.offset === minOffset
+      );
+
+      return findTouchWithMinOffset;
+    }
+  } // private getReadings()
 
   castRays() {
     this.rays = [];
@@ -64,7 +103,9 @@ export class Sensor {
   draw() {
     for (let i = 0; i < this.rayCount; i += 1) {
       let end = this.rays[i][1];
-      if (this.readings[i]) end = this.readings[i];
+      if (this.readings[i]) {
+        end = this.readings[i];
+      }
 
       ctx.beginPath();
       ctx.lineWidth = 2;
