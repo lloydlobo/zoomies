@@ -35,7 +35,7 @@ const VELOCITY = 8;
 
 export const BALL = {
   ARR_BALLS: [] as Ball[],
-  count: random(4, 10),
+  count: random(4, 100),
   hue: `${lerp(0, 255, Math.random() * 10)}`,
   lightness: `${lerp(30, 51.8, Math.random() * 10)}`,
   saturation: `${lerp(50, 81.8, Math.random() * 10)}`,
@@ -53,8 +53,14 @@ export function randomColor(alpha: number): string {
   `;
 }
 
-const offsetArenaEdges = 95.99 / 100;
-export const arena = new Arena(width / 2, width * offsetArenaEdges, 3);
+const offsetArenaEdges = 98.99 / 100;
+export const arena = new Arena(
+  width / 2,
+  height / 2,
+  width * offsetArenaEdges,
+  height,
+  3
+);
 
 function createNewBall() {
   return new Ball(
@@ -84,9 +90,13 @@ const zoomies = new Zoomy(
 );
 
 function animateLoop() {
-  ctx.fillStyle = `hsla(0,${zoomies.speed * 2 + 50}%, 1%, 0.47)`;
+  zoomies.update(arena.borders);
+
+  canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  ctx.fillStyle = `hsla(0,0%, 0%, 0.7)`;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   ctx.save(); // cool camera trick infinite scroll type
   ctx.translate(0, -zoomies.y + canvas.height * 0.7);
   arena.draw(ctx); // use after ctx.save(), ctx.translate()
@@ -102,13 +112,13 @@ function animateLoop() {
   }
 
   zoomies.draw();
-  zoomies.update(arena.borders);
-  zoomies.updateBounds();
-  zoomies.detectCollision();
   zoomies.sensor.draw();
+  zoomies.detectCollision();
+  // zoomies.updateBounds();
   // zoomies.sensor.update();
 
   ctx.restore(); // restore save & translate
+
   requestAnimationFrame(animateLoop);
 }
 
