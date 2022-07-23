@@ -76,6 +76,7 @@ const zoomies = new Zoomy(
 );
 
 function loop() {
+  ctx.save();
   ctx.fillStyle = `hsla(0,${zoomies.speed * 2 + 50}%, 1%, 0.47)`;
   // ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -86,13 +87,14 @@ function loop() {
       STATE_BALL.ARR_BALLS[i].detectCollision();
     }
   }
+
   zoomies.draw();
   zoomies.update();
   zoomies.updateBounds();
   zoomies.detectCollision();
   zoomies.sensor.draw();
   zoomies.sensor.update();
-
+  ctx.restore();
   requestAnimationFrame(loop);
 }
 

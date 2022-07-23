@@ -43,7 +43,7 @@ export class Zoomy extends Shape {
     this.lineWidth = 2;
     this.damaged = false;
     this.speed = 0;
-    this.acceleration = 0.1;
+    this.acceleration = 0.2;
     this.maxSpeed = maxSpeed;
     this.friction = 0.05;
     this.angle = 0;
@@ -59,12 +59,17 @@ export class Zoomy extends Shape {
     ctx.strokeStyle = this.color;
     ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
     ctx.stroke();
+    // if (this.sensor) {
+    // this.sensor.draw();
+    // }
     // ctx.restore();
   }
 
   update() {
     if (!this.damaged) {
       this.move();
+    }
+    if (this.sensor) {
       this.sensor.update();
     }
   }

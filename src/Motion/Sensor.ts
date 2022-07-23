@@ -16,10 +16,10 @@ export class Sensor {
   readings: never[];
   constructor(zoomies: Zoomy) {
     this.zoomies = zoomies;
-    this.rayCount = 5;
-    // const infinity = 1000000;
-    this.rayLength = -zoomies.size - lerp(width, height, 0.5) / 2;
-    this.raySpread = 2 * Math.PI;
+    this.rayCount = 3;
+    this.rayLength = (lerp(width, height, 0.618) / zoomies.size) * 1.618;
+    this.raySpread = Math.PI / 2;
+
     this.rays = [];
     this.readings = [];
   }
@@ -43,6 +43,7 @@ export class Sensor {
         x: this.zoomies.x - Math.sin(rayAngle) * this.rayLength,
         y: this.zoomies.y - Math.cos(rayAngle) * this.rayLength,
       };
+
       this.rays.push([start, end]);
     }
   }
@@ -51,10 +52,18 @@ export class Sensor {
     for (let i = 0; i < this.rayCount; i += 1) {
       let end = this.rays[i][1];
       if (this.readings[i]) end = this.readings[i];
+
       ctx.beginPath();
       ctx.lineWidth = 2;
       ctx.strokeStyle = "yellow";
       ctx.moveTo(this.rays[i][0].x, this.rays[i][0].y);
+      ctx.lineTo(end.x, end.y);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "black";
+      ctx.moveTo(this.rays[i][1].x, this.rays[i][1].y);
       ctx.lineTo(end.x, end.y);
       ctx.stroke();
     }
